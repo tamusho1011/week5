@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html lang="ja"> 
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>Report</title>
-  <!--three.jsを読み込む(CDN)-->
-  <script src="https://cdnjs.cloudflarre.com/ajax/libs/three.js/99/three.min.js"></script>
+  <title>2132088report</title>
 
-</head> 
+  <!-- three.jsを読み込む(ローカル) -->
+  <!-- <script src="./three.js"></script> -->
+  <!-- three.jsを読み込む(CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/99/three.min.js"></script>
+
+</head>
 <body>
-  <script>
-    var init = function(){
+ <script>
+  var init = function() {
 
     var width = 800,
-       height = 600;
-
+        height = 800;
+  
     // レンダラーを作成
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
@@ -23,22 +26,84 @@
     var scene = new THREE.Scene();
   
     // カメラを作成
-    var camera = new THREE.PerspectiveCamera(45, 800 / 600, 1, 1000);
+    var camera = new THREE.PerspectiveCamera(60, width / height, 1, 1000);
 
-    //平行光源を生成
-    var light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(1,1,1);
-    scene.add(light);
 
-    //箱を生成
-    var geometry = new THREE.BoxGeometry(1,1,1);
-    var material =new THREE.MeshPhongMaterial({color:0x0000ff});
-    var box = new THREE.Mesh(geometry,material);
-    box.position.z = (0,0,0);
-    scene.add(box);
+  //ドーナッツ
+var torusGeometry = new THREE.TorusGeometry(6, 1.5, 7, 8); 
+var torusMaterial = new THREE. MeshToonMaterial( { color: 0xffff77 ,wireframe:true} );
+var torus = new THREE.Mesh( torusGeometry, torusMaterial );
+torus.position.set( 0.5, 0, -30);
+scene.add( torus );
 
-    }
-    window.addEvenListener('DOMContentLoaded',init);
-  </script>
+
+//なんかクネクネしてるやつ
+var torusKnotGeometry = new THREE.TorusKnotGeometry( 2, 0.6, 20, 10, 3, 10 ); 
+//全体的な大きさ、チューブの太さ、クネクネの進む方向に対して何分割するか、
+//チューブ方向に対して何分割するか、残りの二つの数字を変えるとクネクネの形が変わる
+var torusKnotMaterial = new THREE. MeshPhongMaterial( { color: 0x00ffff} );
+var torusKnot = new THREE.Mesh( torusKnotGeometry, torusKnotMaterial );
+torusKnot.position.set( 0, 8, -20 );
+scene.add( torusKnot );
+
+//球
+var sphereGeometry = new THREE.SphereGeometry( 0.4, 32, 32 ); 
+var sphereMaterial = new THREE. MeshPhongMaterial( {color: 0xff2255 ,wireframe:true});
+var sphere1 = new THREE.Mesh( sphereGeometry, sphereMaterial );
+var sphere2 = new THREE.Mesh( sphereGeometry, sphereMaterial );
+var sphere3 = new THREE.Mesh( sphereGeometry, sphereMaterial );
+sphere1.position.set(0.5, 0.8, -5 );
+sphere2.position.set( 0, 0.4, -5 );
+sphere3.position.set(-0.5,0.8,-5);
+scene.add( sphere1 );
+scene.add( sphere2 );
+scene.add( sphere3 );
+
+var sphereGeometry = new THREE.SphereGeometry( 0.5, 83, 36 ); 
+var sphereMaterial = new THREE. MeshPhongMaterial( {color: 0xffff55});
+var sphere4 = new THREE.Mesh( sphereGeometry, sphereMaterial );
+sphere4.position.set(0,-0.5,-3);
+scene.add( sphere4 );
+
+    // 平行光源1
+    var directionalLight1 = new THREE.DirectionalLight(0xffffff);
+    directionalLight1.position.set(1, 1, 1);
+    // シーンに追加
+    scene.add(directionalLight1);
+    // 平行光源2
+        var directionalLight2 = new THREE.DirectionalLight(0xff5555);
+    directionalLight2.position.set(-1, 1, 1);
+    // シーンに追加
+    scene.add(directionalLight2);
+  
+    // 初回実行
+    var update = function() {
+      requestAnimationFrame(update);
+  
+      // 箱を回転させる
+      torusKnot.rotation.x += 0.01;
+      torusKnot.rotation.y += 0.05;
+      torusKnot.rotation.z += 0.08;
+      sphere1.rotation.y += 0.05;
+      sphere1.rotation.x += 0.05;
+      sphere1.rotation.z += 0.05;
+      sphere2.rotation.y += 0.04;
+      sphere3.rotation.y += 0.05;
+      sphere3.rotation.x += 0.02;
+      sphere3.rotation.z += 0.05;
+      sphere4.rotation.x += 0.05;
+
+      torus.position.z +=0.05;
+      torus.position.y +=0.01;
+      torus.rotation.x +=0.0;
+      torus.rotation.y +=0.0;
+      torus.rotation.z +=0.02;
+  
+      renderer.render(scene, camera);
+    };
+    update();
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
